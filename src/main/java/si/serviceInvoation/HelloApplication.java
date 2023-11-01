@@ -8,7 +8,9 @@ import si.services.FXRouter;
 import java.io.IOException;
 
 public class HelloApplication extends Application {
+
     public void start(Stage stage) throws IOException {
+        stage.setResizable(false);
         FXRouter.bind(this, stage, "Hello World", 720, 480);
         configRoute();
         FXRouter.goTo("start");
@@ -17,6 +19,7 @@ public class HelloApplication extends Application {
     private void configRoute() {
         String viewPath = "si/views/";
         FXRouter.when("start", viewPath + "start.fxml");
+        FXRouter.when("seriesData", viewPath + "seriesWindow.fxml");
 
     }
 
