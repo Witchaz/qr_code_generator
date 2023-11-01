@@ -1,8 +1,8 @@
-module com.example.qr_code_generator {
+module si.main {
     requires javafx.controls;
     requires javafx.fxml;
 
 
-    opens com.example.qr_code_generator to javafx.fxml;
-    exports com.example.qr_code_generator;
+    opens si.serviceInvoation to javafx.fxml;
+    exports si.serviceInvoation;
 }
