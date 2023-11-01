@@ -1,9 +1,12 @@
 package si.models;
 
 import java.text.DecimalFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class Series {
+
+    final LocalDateTime generateTime;
     String constantText;
     int startNumber;
     int endNumber;
@@ -11,14 +14,15 @@ public class Series {
     boolean fillWithZero;
 
 
-    Series (String constantText,int startNumber,int endNumber,int space,boolean fillWithZero){
+    public Series (String constantText,int startNumber,int endNumber,int space,boolean fillWithZero){
         this.constantText = constantText;
         this.startNumber = startNumber;
         this.endNumber = endNumber;
         this.space = space;
         this.fillWithZero = fillWithZero;
+        this.generateTime = LocalDateTime.now();
     }
-    Series (String constantText){
+    public Series (String constantText){
         this(constantText,0,0,0,false);
     }
 
@@ -35,6 +39,11 @@ public class Series {
             series.add(text);
         }
         return series;
+    }
+
+    public Series equals(Series series){
+        if (generateTime.equals(series.getGenerateTime())) return series;
+        return null;
     }
     private String generateDecimalFormat(){
         String s = "";
@@ -80,6 +89,10 @@ public class Series {
 
     public void setFillWithZero(boolean fillWithZero) {
         this.fillWithZero = fillWithZero;
+    }
+
+    public LocalDateTime getGenerateTime() {
+        return generateTime;
     }
 
     @Override
