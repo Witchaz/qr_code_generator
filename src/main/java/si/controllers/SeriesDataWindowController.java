@@ -2,7 +2,6 @@ package si.controllers;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
@@ -31,11 +30,24 @@ public class SeriesDataWindowController {
     private CheckBox fillWithZeroCheckBox;
     @FXML
     private CheckBox constantOnlyCheckBox;
+    
+    private Series currentSelectedSeries;
 
 
     @FXML
     private void initialize(){
-
+        currentSelectedSeries = Data.getData().getCurrentSelectedSeries();
+        if(currentSelectedSeries != null){
+            currentSelectedSeries = Data.getData().getCurrentSelectedSeries();
+            constantTextTextField.setText(currentSelectedSeries.getConstantText());
+            startNumberTextField.setText(String.format("%d",currentSelectedSeries.getStartNumber()));
+            endNumberTextField.setText(String.format("%d",currentSelectedSeries.getEndNumber()));
+            spaceNumberTextField.setText(String.format("%d",currentSelectedSeries.getSpace()));
+            fillWithZeroCheckBox.setSelected(currentSelectedSeries.isFillWithZero());
+            updatePreview();
+            
+        }
+        
         constantTextTextField.textProperty().addListener((observable, oldValue, newValue) -> {
             updatePreview();
         });
@@ -87,7 +99,7 @@ public class SeriesDataWindowController {
     }
     private void updatePreview(){
        
-        if(!check_right())return;
+        if(isHaveError())return;
         
         previewLabel.setTextFill(Color.BLACK);
         
@@ -116,27 +128,47 @@ public class SeriesDataWindowController {
     }
     
     public void ConfirmButtonOnAction() {
-        if (!check_right()) return;
+        if (isHaveError()) return;
+        
         String constantText = constantTextTextField.getText();
         int startNumber = Integer.parseInt(startNumberTextField.getText());
-        int endNumber = Integer.parseInt(startNumberTextField.getText());
-        int spaceNumber = Integer.parseInt(startNumberTextField.getText());
+        int endNumber = Integer.parseInt(endNumberTextField.getText());
+        int spaceNumber = Integer.parseInt(spaceNumberTextField.getText());
         boolean fillWithZero = fillWithZeroCheckBox.isSelected();
         
-        if(constantOnlyCheckBox.isSelected()){
-            Data.getData().getProject().addSeries(constantText);
-            
-        }
-        else{
-            if (fillWithZero){
-                Data.getData().getProject().addSeries(constantText,startNumber,endNumber,spaceNumber,true);
-            }
-            else{
-                Data.getData().getProject().addSeries(constantText,startNumber,endNumber,0,false);
-            }
-        }
         
-        ((Stage) constantOnlyCheckBox.getScene().getWindow()).close();
+       
+            if (constantOnlyCheckBox.isSelected()) {
+                if(Data.getData().getCurrentSelectedSeries() != null){
+                    currentSelectedSeries.setConstantText(constantText);
+                }
+                else Data.getData().getProject().addSeries(constantText);
+                
+            } else {
+                if (fillWithZero) {
+                    if(Data.getData().getCurrentSelectedSeries() != null){
+                        currentSelectedSeries.setConstantText(constantText);
+                        currentSelectedSeries.setStartNumber(startNumber);
+                        currentSelectedSeries.setEndNumber(endNumber);
+                        currentSelectedSeries.setSpace(spaceNumber);
+                        currentSelectedSeries.setFillWithZero(true);
+                        
+                    }
+                    else Data.getData().getProject().addSeries(constantText, startNumber, endNumber, spaceNumber, true);
+                } else {
+                    if(Data.getData().getCurrentSelectedSeries() != null){
+                        currentSelectedSeries.setConstantText(constantText);
+                        currentSelectedSeries.setStartNumber(startNumber);
+                        currentSelectedSeries.setEndNumber(endNumber);
+                        currentSelectedSeries.setSpace(0);
+                        currentSelectedSeries.setFillWithZero(false);
+                        
+                    }
+                    else Data.getData().getProject().addSeries(constantText, startNumber, endNumber, 0, false);
+                }
+            }
+            
+            ((Stage) constantOnlyCheckBox.getScene().getWindow()).close();
         
         try {
             FXRouter.goTo("start");
@@ -146,12 +178,12 @@ public class SeriesDataWindowController {
         
     }
     
-    private boolean check_right(){
+    private boolean isHaveError(){
         //เช็คช่อง constant อย่างเดียว
         if(constantTextTextField.getText().isEmpty()){
             previewLabel.setText("กรุณาใส่ให้ครบทุกช่อง");
             previewLabel.setTextFill(Color.RED);
-            return false;
+            return true;
         }
         
         if (!constantOnlyCheckBox.isSelected()) {
@@ -160,7 +192,7 @@ public class SeriesDataWindowController {
             if (startNumberTextField.getText().isEmpty() || endNumberTextField.getText().isEmpty()) {
                 previewLabel.setText("กรุณาใส่ให้ครบทุกช่อง");
                 previewLabel.setTextFill(Color.RED);
-                return false;
+                return true;
             }
             
             if (fillWithZeroCheckBox.isSelected()) {
@@ -168,23 +200,23 @@ public class SeriesDataWindowController {
                     if (spaceNumberTextField.getText().isEmpty()) {
                         previewLabel.setText("กรุณาใส่ให้ครบทุกช่อง");
                         previewLabel.setTextFill(Color.RED);
-                        return false;
+                        return true;
                 }
                     else if (Integer.parseInt(spaceNumberTextField.getText()) < 0){
                         previewLabel.setText("ค่าที่ใส่เข้ามาต้องไม่น้อยกว่า 0");
                         previewLabel.setTextFill(Color.RED);
-                        return false;
+                        return true;
                     }
             }
             if (Integer.parseInt(startNumberTextField.getText()) < 0 || Integer.parseInt(endNumberTextField.getText()) < 0){
                 previewLabel.setText("ค่าที่ใส่เข้ามาต้องไม่น้อยกว่า 0");
                 previewLabel.setTextFill(Color.RED);
-                return false;
+                return true;
                 
             }
             
         }
-        return true;
+        return false;
     }
 }
 
