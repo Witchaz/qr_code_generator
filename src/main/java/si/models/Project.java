@@ -13,6 +13,10 @@ public class Project {
     public void addSeries(String constantText,int startNumber,int endNumber,int space,boolean fillWithZero){
         seriesList.add(new Series(constantText,startNumber,endNumber,space,fillWithZero));
     }
+    
+    public void addSeries(String constantText){
+        seriesList.add(new Series(constantText));
+    }
 
     public void removeSeries(Series series){
         seriesList.remove(series);
