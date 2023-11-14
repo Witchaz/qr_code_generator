@@ -131,10 +131,6 @@ public class SeriesDataWindowController {
         if (isHaveError()) return;
         
         String constantText = constantTextTextField.getText();
-        int startNumber = Integer.parseInt(startNumberTextField.getText());
-        int endNumber = Integer.parseInt(endNumberTextField.getText());
-        int spaceNumber = Integer.parseInt(spaceNumberTextField.getText());
-        boolean fillWithZero = fillWithZeroCheckBox.isSelected();
         
         
        
@@ -145,6 +141,11 @@ public class SeriesDataWindowController {
                 else Data.getData().getProject().addSeries(constantText);
                 
             } else {
+                
+                int startNumber = Integer.parseInt(startNumberTextField.getText());
+                int endNumber = Integer.parseInt(endNumberTextField.getText());
+                int spaceNumber = Integer.parseInt(spaceNumberTextField.getText());
+                boolean fillWithZero = fillWithZeroCheckBox.isSelected();
                 if (fillWithZero) {
                     if(Data.getData().getCurrentSelectedSeries() != null){
                         currentSelectedSeries.setConstantText(constantText);

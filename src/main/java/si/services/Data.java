@@ -6,7 +6,7 @@ import si.models.Series;
 public class Data {
 
     private static Data data;
-
+    
     private Project project;
     
     private Series currentSelectedSeries;

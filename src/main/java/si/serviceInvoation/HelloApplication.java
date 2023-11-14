@@ -11,7 +11,7 @@ public class HelloApplication extends Application {
 
     public void start(Stage stage) throws IOException {
         stage.setResizable(false);
-        FXRouter.bind(this, stage, "Hello World", 720, 480);
+        FXRouter.bind(this, stage, "QR code generator", 720, 480);
         configRoute();
         FXRouter.goTo("start");
     }

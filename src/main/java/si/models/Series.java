@@ -34,6 +34,7 @@ public class Series {
                 DecimalFormat df = new DecimalFormat(generateDecimalFormat());
                 text = constantText + df.format(i);
             }
+            else if (startNumber == 0 && endNumber == 0) text =constantText;
             else text = constantText + i;
 
             series.add(text);
@@ -97,6 +98,7 @@ public class Series {
 
     @Override
     public String toString() {
+        if (startNumber ==  0 && endNumber == 0) return constantText;
         if (fillWithZero) {
             DecimalFormat df = new DecimalFormat(generateDecimalFormat());
             return constantText + '{' + df.format(startNumber) + " - " + df.format(endNumber) + '}';
