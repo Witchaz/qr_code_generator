@@ -16,7 +16,7 @@ target/
 .apt_generated
 .classpath
 .factorypath
-.project
+.seriesList
 .settings
 .springBeans
 .sts4-cache
@@ -36,3 +36,9 @@ build/
 
 ### Mac OS ###
 .DS_Store
+
+#data
+data/
+
+#another program
+Snap2IMG/
