@@ -2,11 +2,11 @@ package si.models;
 
 import java.util.ArrayList;
 
-public class Project {
+public class SeriesList {
 
     private final ArrayList<Series> seriesList;
 
-    public Project(){
+    public SeriesList(){
         seriesList = new ArrayList<>();
     }
 

@@ -10,7 +10,7 @@
   <name>qr_code_generator</name>
 
   <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <seriesList.build.sourceEncoding>UTF-8</seriesList.build.sourceEncoding>
 <junit.version>5.9.2</junit.version>  </properties>
 
   <dependencies>

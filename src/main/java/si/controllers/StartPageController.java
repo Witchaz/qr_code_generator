@@ -1,12 +1,9 @@
 package si.controllers;
 
-import com.google.zxing.WriterException;
-import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -16,21 +13,18 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.ProgressIndicator;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import si.models.Project;
+import si.models.SeriesList;
 import si.models.Series;
 import si.services.Data;
 import si.services.QRGenerator;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import org.apache.commons.io.FileUtils;
-import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
 
 public class StartPageController {
-
+    private QRGenerator qrGenerator;
+    
+    @FXML
+    private ProgressIndicator progressIndicator;
     @FXML
     private ListView<Series> seriesListView;
     @FXML
@@ -41,20 +35,21 @@ public class StartPageController {
     private Button editButton;
     @FXML
     private Button generateButton;
-    private Project project;
+    private SeriesList seriesList;
     private ObservableList<Series> items;
     
     @FXML
     private void initialize(){
-        project = Data.getData().getProject();
+        seriesList = Data.getData().getProject();
         editButton.setVisible(false);
         removeButton.setVisible(false);
         
-        items = FXCollections.observableArrayList(project.getSeriesList());
+        items = FXCollections.observableArrayList(seriesList.getSeriesList());
         seriesListView.setItems(items);
-        if (project.getSeriesList().isEmpty()){
+        if (seriesList.getSeriesList().isEmpty()){
             generateButton.setVisible(false);
         }
+        
         
        
         seriesListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Series>() {
@@ -77,7 +72,7 @@ public class StartPageController {
     private void removeButtonOnAction() {
         if (seriesListView.getSelectionModel().getSelectedItems() != null){
             Series s = seriesListView.getSelectionModel().getSelectedItem();
-            project.removeSeries(s);
+            seriesList.removeSeries(s);
             items.remove(s);
             seriesListView.setItems(items);
         }
@@ -110,45 +105,21 @@ public class StartPageController {
     }
     
     public void generateButtonOnAction() {
-        generateButton.setText("generating");
-        
+        progressIndicator.setVisible(true);
+        generateButton.setDisable(true);
         createQRCode();
-        generateButton.setText("done");
+        
     }
     
     private void createQRCode(){
+        if (qrGenerator != null && qrGenerator.isRunning()) qrGenerator.cancel();
         
-        String path = (System.getProperty("user.dir"));
-        path = path + '\\' + "data";
-        Path filePath = Path.of(path);
+        qrGenerator = new QRGenerator();
+        qrGenerator.valueProperty().addListener(((observableValue, oldValue, newValue) -> generateButton.setDisable(newValue != 0)));
+        progressIndicator.progressProperty().bind(qrGenerator.progressProperty());
         
-        if (Files.notExists(filePath)){
-            try {
-                Files.createDirectories(filePath);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        try {
-            FileUtils.cleanDirectory(new File(path));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        
-        
-        for (Series tempSeries : project.getSeriesList()){
-            
-            ArrayList<String> series=  tempSeries.getSeries();
-            for (String temp : series){
-                
-                String thisPath = "%s\\%s.png".formatted(path, temp);
-                File qrFile = new File(thisPath);
-                try {
-                    QRGenerator.createQRImage(qrFile,temp,256,"png");
-                } catch (WriterException | IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        }
+        Thread th = new Thread(qrGenerator);
+        th.setDaemon(true);
+        th.start();
     }
 }

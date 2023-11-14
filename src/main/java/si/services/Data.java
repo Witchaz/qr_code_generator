@@ -1,13 +1,13 @@
 package si.services;
 
-import si.models.Project;
+import si.models.SeriesList;
 import si.models.Series;
 
 public class Data {
 
     private static Data data;
     
-    private Project project;
+    private SeriesList seriesList;
     
     private Series currentSelectedSeries;
 
@@ -16,9 +16,9 @@ public class Data {
         return data;
     }
 
-    public Project getProject(){
-        if (project == null) project = new Project();
-        return project;
+    public SeriesList getProject(){
+        if (seriesList == null) seriesList = new SeriesList();
+        return seriesList;
     }
     
     public Series getCurrentSelectedSeries() {
@@ -29,7 +29,7 @@ public class Data {
         this.currentSelectedSeries = currentSelectedSeries;
     }
     
-    public void setProject(Project project) {
-        this.project = project;
+    public void setProject(SeriesList seriesList) {
+        this.seriesList = seriesList;
     }
 }
