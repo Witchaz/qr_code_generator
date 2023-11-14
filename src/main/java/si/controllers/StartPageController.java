@@ -1,6 +1,7 @@
 package si.controllers;
 
 import com.google.zxing.WriterException;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -26,10 +27,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import org.apache.commons.io.FileUtils;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 public class StartPageController {
-    @FXML
-    private ProgressIndicator progressBar;
+
     @FXML
     private ListView<Series> seriesListView;
     @FXML
@@ -42,6 +43,7 @@ public class StartPageController {
     private Button generateButton;
     private Project project;
     private ObservableList<Series> items;
+    
     @FXML
     private void initialize(){
         project = Data.getData().getProject();
@@ -53,6 +55,8 @@ public class StartPageController {
         if (project.getSeriesList().isEmpty()){
             generateButton.setVisible(false);
         }
+        
+       
         seriesListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Series>() {
             
             @Override
@@ -106,7 +110,14 @@ public class StartPageController {
     }
     
     public void generateButtonOnAction() {
-        progressBar.setVisible(true);
+        generateButton.setText("generating");
+        
+        createQRCode();
+        generateButton.setText("done");
+    }
+    
+    private void createQRCode(){
+        
         String path = (System.getProperty("user.dir"));
         path = path + '\\' + "data";
         Path filePath = Path.of(path);
@@ -123,11 +134,13 @@ public class StartPageController {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        System.out.println(project.getSeriesList().size());
+        
+        
         for (Series tempSeries : project.getSeriesList()){
             
             ArrayList<String> series=  tempSeries.getSeries();
             for (String temp : series){
+                
                 String thisPath = "%s\\%s.png".formatted(path, temp);
                 File qrFile = new File(thisPath);
                 try {
