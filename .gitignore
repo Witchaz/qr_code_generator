@@ -36,3 +36,9 @@ build/
 
 ### Mac OS ###
 .DS_Store
+
+#data
+!data/
+
+#another program
+!Snap2IMG/
