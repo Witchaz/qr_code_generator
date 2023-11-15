@@ -12,8 +12,9 @@ window version : *[window v.1.1](https://github.com/Witchaz/qr_code_generator/re
 ### ต้องการรวมรูปภาพทั้งหมดให้เป็นรูปเดียว ?
 
 *[Snap2IMG 2.0](https://snap2img.soft112.com/)* <br>
-*[Recommended setting](https://github.com/Witchaz/qr_code_generator/releases/download/1.1/Settings.xml)* <br>
+*[Recommended setting](https://github.com/Witchaz/qr_code_generator/releases/download/1.1/Settings.xml)* <br><br>
 ให้นำไฟล์ setting ไปใส่ไว้ใน folder เดียวกันกับโปรแกรม snap2Img
 
 ### คู่มือการใช้งาน
 
+*[คู่มือการใช้งานโปรแกรม](https://github.com/Witchaz/qr_code_generator/releases/download/1.1/QR.code.generator.user.manual.pdf)*
