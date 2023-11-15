@@ -13,7 +13,7 @@ public class HelloApplication extends Application {
 
     public void start(Stage stage) throws IOException {
         stage.setResizable(false);
-        stage.getIcons().add(new Image(getClass().getResource("/si/image/Logo.png").toExternalForm()));
+        stage.getIcons().add(new Image(getClass().getResource("/si/image/logo.png").toExternalForm()));
         FXRouter.bind(this, stage, "QR code generator", 720, 480);
         configRoute();
         FXRouter.goTo("start");

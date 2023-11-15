@@ -1,4 +1,4 @@
-module si.main {
+module si {
     requires javafx.controls;
     requires javafx.fxml;
 	requires com.google.zxing;
